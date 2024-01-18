@@ -1,15 +1,13 @@
 import csv
+from collections import Counter
 
 with open('favorite.csv', 'r') as file:
     reader = csv.DictReader(file)
-    counts = {}
+    counts = Counter()
 
     for row in reader:
-        favorite = row["Name"]
-        if favorite in counts:
-            counts[favorite] += 1
-        else:
-            counts[favorite] = 1
+        favorite = row['Name']
+        counts[favorite] += 1
 
-for favorite in sorted(counts):
+for favorite,count in counts.most_common():
     print(f"{favorite}: {counts[favorite]}")
