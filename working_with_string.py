@@ -1,3 +1,9 @@
-txt ="Hello world"
+txt ="My Name is Angelo and im {}"
+age=36
 x=txt.strip()
-print(x)
+print(txt.format(age))
+print(txt.format(x))
+
+print(bool("abc"))
+print(bool(0))   
+    
