@@ -13,7 +13,7 @@ class Node:
 def heuristic(node, goal):
     return abs(node.x - goal.x) + abs(node.y - goal.y)
 
-def astar(start, goal, grid):
+def astar(grid, start, goal):
     open_list = []
     closed_set = set()
 
@@ -57,17 +57,22 @@ def astar(start, goal, grid):
     return None
 
 # Example usage
-grid = [[0, 0, 0, 0, 0],
-        [0, 1, 1, 0, 0],
-        [0, 0, 0, 0, 0],
-        [0, 0, 1, 1, 0],
-        [0, 0, 0, 0, 0]]
+grid = [
+    [0, 0, 0, 0, 0],
+    [0, 1, 1, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 1, 1, 0],
+    [0, 0, 0, 0, 0]
+]
 
 start = Node(0, 0, 0)
 goal = Node(4, 4, 0)
 
-path = astar(start, goal, grid)
+path = astar(grid, start, goal)
+
 if path:
-    print("Shortest path found:", path)
+    print("Shortest path found:")
+    for point in path:
+        print(point)
 else:
     print("No path found.")
