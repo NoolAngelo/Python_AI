@@ -1,5 +1,5 @@
 
-    """The probability distribution given represents the probabilities of getting 0, 1, 2, or 3 heads when flipping three coins. 
+"""The probability distribution given represents the probabilities of getting 0, 1, 2, or 3 heads when flipping three coins. 
 
 The statement P(H < 3) = 0.875 represents the probability of getting less than 3 heads. This is the sum of the probabilities of getting 0, 1, or 2 heads, which is 0.125 + 0.375 + 0.375 = 0.875.
 
