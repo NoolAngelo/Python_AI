@@ -28,8 +28,7 @@ def merge(left, right):
 
 
 
-user_input = input("enter numbers separaterd by spaces: ")
-list_a = [int(num) for num in user_input.split()]
-
-print("Unsorted List:", list_a)
-print("Sorted List:", merge_sort(list_a))
+user_input = input("Enter numbers for the test case (comma-separated): ")
+arr = list(map(int, user_input.split(',')))
+print("Unsorted List:", arr)
+print("Sorted List:", merge_sort(arr))
