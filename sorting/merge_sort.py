@@ -26,4 +26,10 @@ def merge(left, right):
 
     return merged
 
-print (merge_sort([3, 5, 1, 2, 4, 6, 8, 7]) )
+
+
+user_input = input("enter numbers separaterd by spaces: ")
+list_a = [int(num) for num in user_input.split()]
+
+print("Unsorted List:", list_a)
+print("Sorted List:", merge_sort(list_a))
