@@ -1,7 +1,6 @@
-cereal_file = open('cereal.csv', 'r')
+import csv
 
-
-print(cereal_file.readable())
-print(cereal_file.read())
-cereal_file.close()
-
+with open('cereal.csv', 'r') as csvfile:
+    reader = csv.DictReader(csvfile)
+    for row in reader:
+        print(row)
