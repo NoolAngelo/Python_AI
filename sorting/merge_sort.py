@@ -32,3 +32,7 @@ user_input = input("Enter numbers for the test case (comma-separated): ")
 arr = list(map(int, user_input.split(',')))
 print("Unsorted List:", arr)
 print("Sorted List:", merge_sort(arr))
+if (len(arr) % 2) ==0:
+    print("the array is even")
+else:
+    print("the array is odd")
