@@ -8,5 +8,9 @@ def quick_sort(arr):
         right = [x for x in arr if x > pivot]
         return quick_sort(left) + middle + quick_sort(right)
 
-# Test the function
-print(quick_sort([3,6,8,10,1,2,1]))
+user_input = input("enter array numbers separated by space: ")
+array = list(map(int,user_input.split()))
+
+print("length of the array: ",len(array))
+print("unsorted array: ",array)
+print("sorted array: ",quick_sort(array))
