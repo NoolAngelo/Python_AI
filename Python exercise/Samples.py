@@ -1,11 +1,5 @@
-x = 1
-y = 2.0
-z = "3"
+bakla = "Nath"
 
-x = float(x)
-y=float(y)
-z=float(z)
+question = input("sinong bakla? ")
+print("si " + bakla)
 
-print(type(x))
-print(type(y))
-print(type(z))
