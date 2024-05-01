@@ -17,7 +17,7 @@ print(reversed_name)
 print(name[slice])
 
 
-for seconds in range(10,0,-1):
+for seconds in range(3,0,-1):
     print(seconds)
     time.sleep(1)
 print("bomba na!")
@@ -39,3 +39,11 @@ dinner = ["adobo","sinigang","tinola"]
 dessert = ["makapuno ice cream", "tubeg","mango"]
 food1 =[drinks,dinner,dessert]
 print(food1[2][2])
+
+utensils = {"fork","spoon","knife"}
+dishes = {"pan","bowl","cup"}
+
+utensils.update(dishes)
+
+for task in utensils:
+    print(task)
