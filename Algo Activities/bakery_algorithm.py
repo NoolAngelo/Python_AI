@@ -1,6 +1,6 @@
 from threading import Thread
 
-num_threads = 5
+num_threads = 8
 choosing = [False] * num_threads
 number = [0] * num_threads
 
