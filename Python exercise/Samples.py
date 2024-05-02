@@ -1,5 +1,5 @@
 import time
-
+#1st sample
 name ="Nool/Angelo"
 
 first_name = name[:4]
@@ -16,7 +16,7 @@ print(reversed_name)
 
 print(name[slice])
 
-
+#2nd sample
 for seconds in range(3,0,-1):
     print(seconds)
     time.sleep(1)
@@ -40,10 +40,13 @@ dessert = ["makapuno ice cream", "tubeg","mango"]
 food1 =[drinks,dinner,dessert]
 print(food1[2][2])
 
+#3rd sample
 utensils = {"fork","spoon","knife"}
 dishes = {"pan","bowl","cup"}
 
+utensils.add("napkins")
 utensils.update(dishes)
+dinner_table = utensils.union(dishes)
 
-for task in utensils:
+for task in dinner_table:
     print(task)
