@@ -1,10 +1,13 @@
+import sys
+from PIL import Image, ImageDraw
+
 class Node:
     def __init__(self, state, parent, action):
         self.state = state
         self.parent = parent
         self.action = action
 
-class StackFrontier():
+class StackFrontier:
     def __init__(self):
         self.frontier = []
     
@@ -19,30 +22,21 @@ class StackFrontier():
     
     def remove(self):
         if self.empty():
-            raise Exception("empty frontier")
+            raise Exception("Empty frontier")
         else:
             node = self.frontier[-1]
             self.frontier = self.frontier[:-1]
             return node
-        
+
 class QueueFrontier(StackFrontier):
     def remove(self):
         if self.empty():
-            raise Exception("empty frontier")
-        else:
-            node = self.frontier[-1]
-            self.frontier = self.frontier[:-1]
-            return node
-        
-class QueueFrontier(StackFrontier):
-    def remove(self):
-        if self.empty():
-            raise Exception("empty frontier")
+            raise Exception("Empty frontier")
         else:
             node = self.frontier[0]
             self.frontier = self.frontier[1:]
             return node
-        
+
 class Maze:
     def __init__(self, filename):
         # Read the maze from a file
@@ -51,9 +45,9 @@ class Maze:
 
         # Validate start and goal
         if contents.count("A") != 1:
-            raise Exception("maze must have exactly one start point")
+            raise Exception("Maze must have exactly one start point")
         if contents.count("B") != 1:
-            raise Exception("maze must have exactly one goal")
+            raise Exception("Maze must have exactly one goal")
         
         # Determine height and width of maze
         contents = contents.splitlines()
@@ -81,6 +75,7 @@ class Maze:
             self.walls.append(row)
 
         self.solution = None
+        self.explored = set()
 
     def print(self):
         solution = self.solution[1] if self.solution is not None else None
@@ -116,34 +111,31 @@ class Maze:
         return result
     
     def solve(self):
-        """finds a solution to maze, if one exists"""
+        """Finds a solution to maze, if one exists."""
 
-    # keep track of number of states explored
         self.num_explored = 0
-    # Initialize frontier to just the starting position
+
+        # Initialize frontier to just the starting position
         start = Node(state=self.start, parent=None, action=None)
         frontier = QueueFrontier()
         frontier.add(start)
 
-    # Initialize an empty explored set
-        self.explored = set()
-
-    # Keep looping until solution found
+        # Keep looping until solution found
         while True:
-        # If nothing left in frontier, then no path
+            # If nothing left in frontier, then no path
             if frontier.empty():
-                raise Exception("no solution")
+                raise Exception("No solution")
 
-        # Choose a node from the frontier
+            # Choose a node from the frontier
             node = frontier.remove()
             self.num_explored += 1
 
-        # If node is the goal, then we have a solution
+            # If node is the goal, then we have a solution
             if node.state == self.goal:
                 actions = []
                 cells = []
 
-                #follow parent nodes to get solution
+                # Follow parent nodes to find solution
                 while node.parent is not None:
                     actions.append(node.action)
                     cells.append(node.state)
@@ -153,17 +145,16 @@ class Maze:
                 self.solution = (actions, cells)
                 return
 
-        # Mark node as explored
+            # Mark node as explored
             self.explored.add(node.state)
 
-        # Add neighbors to frontier
+            # Add neighbors to frontier
             for action, state in self.neighbors(node.state):
                 if not frontier.contains_state(state) and state not in self.explored:
                     child = Node(state=state, parent=node, action=action)
                     frontier.add(child)
 
     def output_image(self, filename, show_solution=True, show_explored=False):
-        from PIL import Image, ImageDraw
         cell_size = 50
         cell_border = 2
 
@@ -199,7 +190,16 @@ class Maze:
 
         img.save(filename)
 
-m = Maze("maze1.txt")
-print("Maze:")
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        sys.exit("Usage: python maze.py maze.txt")
 
-
+    m = Maze(sys.argv[1])
+    print("Maze:")
+    m.print()
+    print("Solving...")
+    m.solve()
+    print("States Explored:", m.num_explored)
+    print("Solution:")
+    m.print()
+    m.output_image("maze_solution.png", show_explored=True)
