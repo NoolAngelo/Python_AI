@@ -2,10 +2,11 @@ import sys
 from PIL import Image, ImageDraw
 
 class Node:
-    def __init__(self, state, parent, action):
+    def __init__(self, state, parent, action, cost=0):
         self.state = state
         self.parent = parent
         self.action = action
+        self.cost = cost
 
 class StackFrontier:
     def __init__(self):
@@ -152,7 +153,7 @@ class Maze:
             # Add neighbors to frontier
             for action, state in self.neighbors(node.state):
                 if not frontier.contains_state(state) and state not in self.explored:
-                    child = Node(state=state, parent=node, action=action)
+                    child = Node(state=state, parent=node, action=action, cost=node.cost + 1)
                     frontier.add(child)
 
     def output_image(self, filename, show_solution=True, show_explored=False):
@@ -191,12 +192,9 @@ class Maze:
 
         img.save(filename)
 
-if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        sys.exit("Usage: python maze.py maze.txt")
-
+def main(filename):
     try:
-        m = Maze(sys.argv[1])
+        m = Maze(filename)
     except Exception as e:
         sys.exit(str(e))
 
@@ -211,4 +209,18 @@ if __name__ == "__main__":
     print("States Explored:", m.num_explored)
     print("Solution:")
     m.print()
-    m.output_image("maze_solution.png", show_explored=True)
+    m.output_image("maze.png", show_solution=True)
+    print(f"Solution saved as 'maze.png'")
+
+    if m.solution:
+        print(f"Steps to solution: {len(m.solution[0])}")
+        print(f"Path: {' -> '.join(m.solution[0])}")
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("No maze file provided as argument.")
+        filename = input("Please enter the maze filename: ")
+    else:
+        filename = sys.argv[1]
+    
+    main(filename)
