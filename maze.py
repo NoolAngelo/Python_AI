@@ -24,8 +24,7 @@ class StackFrontier:
         if self.empty():
             raise Exception("Empty frontier")
         else:
-            node = self.frontier[-1]
-            self.frontier = self.frontier[:-1]
+            node = self.frontier.pop()
             return node
 
 class QueueFrontier(StackFrontier):
@@ -33,15 +32,17 @@ class QueueFrontier(StackFrontier):
         if self.empty():
             raise Exception("Empty frontier")
         else:
-            node = self.frontier[0]
-            self.frontier = self.frontier[1:]
+            node = self.frontier.pop(0)
             return node
 
 class Maze:
     def __init__(self, filename):
         # Read the maze from a file
-        with open(filename) as f:
-            contents = f.read()
+        try:
+            with open(filename) as f:
+                contents = f.read()
+        except FileNotFoundError:
+            raise Exception(f"File {filename} not found")
 
         # Validate start and goal
         if contents.count("A") != 1:
@@ -194,11 +195,19 @@ if __name__ == "__main__":
     if len(sys.argv) != 2:
         sys.exit("Usage: python maze.py maze.txt")
 
-    m = Maze(sys.argv[1])
+    try:
+        m = Maze(sys.argv[1])
+    except Exception as e:
+        sys.exit(str(e))
+
     print("Maze:")
     m.print()
     print("Solving...")
-    m.solve()
+    try:
+        m.solve()
+    except Exception as e:
+        sys.exit(str(e))
+
     print("States Explored:", m.num_explored)
     print("Solution:")
     m.print()
