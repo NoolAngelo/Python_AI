@@ -1,59 +1,60 @@
 import sys
 import os
 from PIL import Image, ImageDraw
+from typing import List, Tuple, Optional
 
 class Node:
-    def __init__(self, state, parent, action, heuristic=0):
+    def __init__(self, state: Tuple[int, int], parent: Optional['Node'], action: Optional[str], heuristic: int = 0):
         self.state = state
         self.parent = parent
         self.action = action
         self.heuristic = heuristic
 
-    def __lt__(self, other):
+    def __lt__(self, other: 'Node'):
         return self.heuristic < other.heuristic
 
-# class PriorityQueueFrontier:
+class PriorityQueueFrontier:
     def __init__(self):
-        self.frontier = []
+        self.frontier: List[Node] = []
 
-    def add(self, node):
+    def add(self, node: Node):
         self.frontier.append(node)
         self.frontier.sort()
 
-    def contains_state(self, state):
+    def contains_state(self, state: Tuple[int, int]) -> bool:
         return any(node.state == state for node in self.frontier)
 
-    def empty(self):
+    def empty(self) -> bool:
         return len(self.frontier) == 0
 
-    def remove(self):
+    def remove(self) -> Node:
         if self.empty():
             raise Exception("Empty frontier")
         else:
-            node = self.frontier.pop(0)
-            return node
+            return self.frontier.pop(0)
 
 class Maze:
-    def __init__(self, filename):
-        # Read the maze from file
+    def __init__(self, filename: str):
+        self._load_maze(filename)
+        self.solution = None
+        self.explored = set()
+
+    def _load_maze(self, filename: str):
         try:
             with open(filename) as f:
                 contents = f.read()
         except FileNotFoundError:
             raise Exception(f"File {filename} not found")
 
-        # Validate start and goal
         if contents.count("A") != 1:
             raise Exception("Maze must have exactly one start point")
         if contents.count("B") != 1:
             raise Exception("Maze must have exactly one goal")
-        
-        # Determine height and width of maze
+
         contents = contents.splitlines()
         self.height = len(contents)
         self.width = max(len(line) for line in contents)
 
-        # Keep track of walls
         self.walls = []
         for i in range(self.height):
             row = []
@@ -73,9 +74,6 @@ class Maze:
                     row.append(False)
             self.walls.append(row)
 
-        self.solution = None
-        self.explored = set()
-
     def print(self):
         solution = self.solution[1] if self.solution is not None else None
         print()
@@ -94,7 +92,7 @@ class Maze:
             print()
         print()
 
-    def neighbors(self, state):
+    def neighbors(self, state: Tuple[int, int]) -> List[Tuple[str, Tuple[int, int]]]:
         row, col = state
         candidates = [
             ("up", (row - 1, col)),
@@ -109,38 +107,28 @@ class Maze:
                 result.append((action, (r, c)))
         return result
 
-    def manhattan_distance(self, state):
-        """Calculate the Manhattan distance from the current state to the goal."""
+    def manhattan_distance(self, state: Tuple[int, int]) -> int:
         (x1, y1) = state
         (x2, y2) = self.goal
         return abs(x1 - x2) + abs(y1 - y2)
     
     def solve(self):
-        """Finds a solution to maze, if one exists."""
-
         self.num_explored = 0
-
-        # Initialize frontier to just the starting position
         start = Node(state=self.start, parent=None, action=None, heuristic=self.manhattan_distance(self.start))
         frontier = PriorityQueueFrontier()
         frontier.add(start)
 
-        # Keep looping until solution found
         while True:
-            # If nothing left in frontier, then no path
             if frontier.empty():
                 raise Exception("No solution")
 
-            # Choose a node from the frontier
             node = frontier.remove()
             self.num_explored += 1
 
-            # If node is the goal, then we have a solution
             if node.state == self.goal:
                 actions = []
                 cells = []
 
-                # Follow parent nodes to find solution
                 while node.parent is not None:
                     actions.append(node.action)
                     cells.append(node.state)
@@ -150,20 +138,17 @@ class Maze:
                 self.solution = (actions, cells)
                 return
 
-            # Mark node as explored
             self.explored.add(node.state)
 
-            # Add neighbors to frontier
             for action, state in self.neighbors(node.state):
                 if not frontier.contains_state(state) and state not in self.explored:
                     child = Node(state=state, parent=node, action=action, heuristic=self.manhattan_distance(state))
                     frontier.add(child)
 
-    def output_image(self, filename, show_solution=True, show_explored=False):
+    def output_image(self, filename: str, show_solution: bool = True, show_explored: bool = False) -> str:
         cell_size = 50
         cell_border = 2
 
-        # Create a blank canvas
         img = Image.new(
             "RGBA",
             (self.width * cell_size, self.height * cell_size),
@@ -193,7 +178,6 @@ class Maze:
                     fill=fill
                 )
 
-        # Save the image, incrementing the filename if necessary
         base, extension = os.path.splitext(filename)
         counter = 1
         new_filename = filename
@@ -203,7 +187,7 @@ class Maze:
         img.save(new_filename)
         return new_filename
 
-def main(filename):
+def main(filename: str):
     try:
         m = Maze(filename)
     except Exception as e:
