@@ -234,5 +234,6 @@ if __name__ == "__main__":
     else:
         filename = sys.argv[1]
         print(f"Using maze file: {filename}")
+        print("Press 'Enter' to continue...")
     
     main(filename)
