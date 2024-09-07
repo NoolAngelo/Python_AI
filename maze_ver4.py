@@ -233,5 +233,6 @@ if __name__ == "__main__":
         filename = input("Please enter the maze filename: ")
     else:
         filename = sys.argv[1]
+        print(f"Using maze file: {filename}")
     
     main(filename)
