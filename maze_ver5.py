@@ -1,43 +1,61 @@
 import sys
 import os
+import heapq
 from PIL import Image, ImageDraw
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Dict
 
 class Node:
-    def __init__(self, state: Tuple[int, int], parent: Optional['Node'], action: Optional[str], heuristic: int = 0):
+    """A node in the search tree."""
+    def __init__(self, state: Tuple[int, int], parent: Optional['Node'], action: Optional[str], cost: int = 0, heuristic: int = 0):
         self.state = state
         self.parent = parent
         self.action = action
+        self.cost = cost
         self.heuristic = heuristic
+        self.total_cost = cost + heuristic
 
     def __lt__(self, other: 'Node'):
-        return self.heuristic < other.heuristic
+        return self.total_cost < other.total_cost
 
 class PriorityQueueFrontier:
+    """A priority queue frontier implementation using heapq."""
     def __init__(self):
-        self.frontier: List[Node] = []
+        self._frontier: List[Node] = []
+        self._states: Dict[Tuple[int, int], float] = {}
 
     def add(self, node: Node):
-        self.frontier.append(node)
-        self.frontier.sort()
+        state = node.state
+        if state not in self._states or node.total_cost < self._states[state]:
+            heapq.heappush(self._frontier, node)
+            self._states[state] = node.total_cost
 
     def contains_state(self, state: Tuple[int, int]) -> bool:
-        return any(node.state == state for node in self.frontier)
+        return state in self._states
 
     def empty(self) -> bool:
-        return len(self.frontier) == 0
+        return len(self._frontier) == 0
 
     def remove(self) -> Node:
         if self.empty():
             raise Exception("Empty frontier")
-        else:
-            return self.frontier.pop(0)
+        node = heapq.heappop(self._frontier)
+        self._states.pop(node.state)
+        return node
 
 class Maze:
+    """Maze solver using A* search algorithm."""
     def __init__(self, filename: str):
         self._load_maze(filename)
         self.solution = None
         self.explored = set()
+        self.colors = {
+            'wall': (40, 40, 40),
+            'start': (255, 0, 0),
+            'goal': (0, 171, 28),
+            'path': (220, 235, 113),
+            'explored': (212, 97, 85),
+            'empty': (237, 240, 252)
+        }
 
     def _load_maze(self, filename: str):
         try:
@@ -113,42 +131,56 @@ class Maze:
         return abs(x1 - x2) + abs(y1 - y2)
     
     def solve(self):
+        """Solve the maze using A* search with Manhattan distance heuristic."""
         self.num_explored = 0
-        start = Node(state=self.start, parent=None, action=None, heuristic=self.manhattan_distance(self.start))
+        start = Node(
+            state=self.start,
+            parent=None,
+            action=None,
+            cost=0,
+            heuristic=self.manhattan_distance(self.start)
+        )
         frontier = PriorityQueueFrontier()
         frontier.add(start)
 
         while True:
             if frontier.empty():
-                raise Exception("No solution")
+                raise Exception("No solution exists")
 
             node = frontier.remove()
             self.num_explored += 1
 
             if node.state == self.goal:
-                actions = []
-                cells = []
-
-                while node.parent is not None:
-                    actions.append(node.action)
-                    cells.append(node.state)
-                    node = node.parent
-                actions.reverse()
-                cells.reverse()
-                self.solution = (actions, cells)
-                return
+                return self._reconstruct_path(node)
 
             self.explored.add(node.state)
 
             for action, state in self.neighbors(node.state):
                 if not frontier.contains_state(state) and state not in self.explored:
-                    child = Node(state=state, parent=node, action=action, heuristic=self.manhattan_distance(state))
+                    child = Node(
+                        state=state,
+                        parent=node,
+                        action=action,
+                        cost=node.cost + 1,
+                        heuristic=self.manhattan_distance(state)
+                    )
                     frontier.add(child)
 
-    def output_image(self, filename: str, show_solution: bool = True, show_explored: bool = False) -> str:
-        cell_size = 50
-        cell_border = 2
+    def _reconstruct_path(self, node: Node):
+        """Reconstruct the path from start to goal."""
+        actions = []
+        cells = []
+        while node.parent is not None:
+            actions.append(node.action)
+            cells.append(node.state)
+            node = node.parent
+        actions.reverse()
+        cells.reverse()
+        self.solution = (actions, cells)
 
+    def output_image(self, filename: str, show_solution: bool = True, show_explored: bool = False, 
+                    cell_size: int = 50, cell_border: int = 2) -> str:
+        """Generate an image of the maze with optional solution path."""
         img = Image.new(
             "RGBA",
             (self.width * cell_size, self.height * cell_size),
@@ -160,17 +192,17 @@ class Maze:
         for i, row in enumerate(self.walls):
             for j, col in enumerate(row):
                 if col:
-                    fill = (40, 40, 40)
+                    fill = self.colors['wall']
                 elif (i, j) == self.start:
-                    fill = (255, 0, 0)
+                    fill = self.colors['start']
                 elif (i, j) == self.goal:
-                    fill = (0, 171, 28)
+                    fill = self.colors['goal']
                 elif solution is not None and show_solution and (i, j) in solution:
-                    fill = (220, 235, 113)
+                    fill = self.colors['path']
                 elif solution is not None and show_explored and (i, j) in self.explored:
-                    fill = (212, 97, 85)
+                    fill = self.colors['explored']
                 else:
-                    fill = (237, 240, 252)
+                    fill = self.colors['empty']
 
                 draw.rectangle(
                     ([(j * cell_size + cell_border, i * cell_size + cell_border),
@@ -178,6 +210,10 @@ class Maze:
                     fill=fill
                 )
 
+        return self._save_image(filename, img)
+
+    def _save_image(self, filename: str, img: Image.Image) -> str:
+        """Save the image with an incremental filename if file exists."""
         base, extension = os.path.splitext(filename)
         counter = 1
         new_filename = filename
@@ -188,23 +224,26 @@ class Maze:
         return new_filename
 
 def main(filename: str):
+    """Main function to solve and visualize the maze."""
     try:
         m = Maze(filename)
     except Exception as e:
-        sys.exit(str(e))
+        sys.exit(f"Error loading maze: {str(e)}")
 
     print("Maze:")
     m.print()
     print("Solving...")
+    
     try:
         m.solve()
     except Exception as e:
-        sys.exit(str(e))
+        sys.exit(f"Error solving maze: {str(e)}")
 
     print("States Explored:", m.num_explored)
     print("Solution:")
     m.print()
-    output_filename = m.output_image("maze_solution.png", show_solution=True)
+    
+    output_filename = m.output_image("maze_solution.png", show_solution=True, show_explored=True)
     print(f"Solution saved as '{output_filename}'")
 
     if m.solution:
@@ -219,6 +258,3 @@ if __name__ == "__main__":
         filename = sys.argv[1]
     
     main(filename)
-
-if __name__ == "__main__":
-    print("GGs")
