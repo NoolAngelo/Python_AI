@@ -1,4 +1,18 @@
 def knapsack_01(weights, values, capacity):
+    """
+    Solves the 0/1 Knapsack problem using dynamic programming.
+    
+    Args:
+        weights (list): List of item weights.
+        values (list): List of item values.
+        capacity (int): Maximum capacity of the knapsack.
+    
+    Returns:
+        tuple: (total_weight, total_value, total_items_used, selected_items)
+    """
+    if not weights or not values or capacity <= 0:
+        raise ValueError("Invalid input: weights, values, and capacity must be positive.")
+    
     n = len(weights)
     dp = [[0] * (capacity + 1) for _ in range(n + 1)]
     included_items = set()
@@ -25,17 +39,25 @@ def knapsack_01(weights, values, capacity):
 
     return total_weight, total_value, total_items_used, selected_items
 
-# Example usage
-weights = [15, 10, 25, 8, 20, 18, 12, 5, 22, 14]
-values = [30, 20, 40, 12, 35, 30, 18, 10, 45, 25]
-capacity = 100
+# Interactive example usage
+if __name__ == "__main__":
+    try:
+        weights_input = input("Enter weights separated by spaces: ")
+        values_input = input("Enter values separated by spaces: ")
+        capacity_input = input("Enter knapsack capacity: ")
 
-total_weight, total_value, total_items_used, selected_items = knapsack_01(weights, values, capacity)
+        weights = list(map(int, weights_input.split()))
+        values = list(map(int, values_input.split()))
+        capacity = int(capacity_input)
 
-print("Selected items:")
-for item in selected_items:
-    print(f"Item {item}: Weight {weights[item - 1]}, Value {values[item - 1]}")
+        total_weight, total_value, total_items_used, selected_items = knapsack_01(weights, values, capacity)
 
-print("\nTotal Weight of Selected Items:", total_weight)
-print("Total Value of Selected Items:", total_value)
-print("Total Items Used:", total_items_used)
+        print("Selected items:")
+        for item in selected_items:
+            print(f"Item {item}: Weight {weights[item - 1]}, Value {values[item - 1]}")
+
+        print("\nTotal Weight of Selected Items:", total_weight)
+        print("Total Value of Selected Items:", total_value)
+        print("Total Items Used:", total_items_used)
+    except ValueError as e:
+        print(f"Error: {e}")

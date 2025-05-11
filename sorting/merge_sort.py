@@ -1,4 +1,13 @@
 def merge_sort(arr):
+    """
+    Sorts a list using the Merge Sort algorithm.
+    
+    Args:
+        arr (list): List of numbers to be sorted.
+    
+    Returns:
+        list: Sorted list.
+    """
     if len(arr) <= 1:
         return arr
 
@@ -9,6 +18,16 @@ def merge_sort(arr):
     return merge(merge_sort(left_half), merge_sort(right_half))
 
 def merge(left, right):
+    """
+    Merges two sorted lists into a single sorted list.
+    
+    Args:
+        left (list): Left half of the list.
+        right (list): Right half of the list.
+    
+    Returns:
+        list: Merged sorted list.
+    """
     merged = []
     left_index = 0
     right_index = 0
@@ -26,13 +45,16 @@ def merge(left, right):
 
     return merged
 
-
-
-user_input = input("Enter numbers for the test case (comma-separated): ")
-arr = list(map(int, user_input.split(',')))
-print("Unsorted List:", arr)
-print("Sorted List:", merge_sort(arr))
-if (len(arr) % 2) ==0:
-    print("the array is even")
-else:
-    print("the array is odd")
+# Interactive example usage
+if __name__ == "__main__":
+    try:
+        user_input = input("Enter numbers for the test case (comma-separated): ")
+        arr = list(map(int, user_input.split(',')))
+        print("Unsorted List:", arr)
+        print("Sorted List:", merge_sort(arr))
+        if (len(arr) % 2) == 0:
+            print("The array is even")
+        else:
+            print("The array is odd")
+    except ValueError as e:
+        print(f"Error: {e}")
