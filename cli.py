@@ -86,8 +86,8 @@ def main(args: Optional[List[str]] = None) -> int:
             from sorting.merge_sort import merge_sort
             result = merge_sort(parsed_args.numbers)
         elif parsed_args.algorithm == "quick":
-            from sorting.quick_sort import quicksort
-            result = quicksort(parsed_args.numbers)
+            from sorting.quick_sort import quick_sort
+            result = quick_sort(parsed_args.numbers)
         elif parsed_args.algorithm == "selection":
             from sorting.Selection_sort import selection_sort
             result = selection_sort(parsed_args.numbers)

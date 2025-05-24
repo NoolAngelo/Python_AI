@@ -18,11 +18,11 @@ def test_knapsack_basic():
     
     total_weight, total_value, num_items, selected = knapsack_01(weights, values, capacity)
     
-    # For this test case, optimal solution should include items 1 and 2
-    # (0-indexed would be 0 and 1)
-    assert total_value == 160  # 60 + 100
-    assert total_weight <= 50
-    assert 1 in selected and 2 in selected  # Items at indices 0 and 1
+    # For this test case, optimal solution should include items 2 and 3 (1-indexed)
+    # which corresponds to weights [20, 30] and values [100, 120]
+    assert total_value == 220  # 100 + 120
+    assert total_weight == 50  # 20 + 30
+    assert set(selected) == {2, 3}  # Items 2 and 3 (1-indexed)
     
     
 def test_knapsack_empty():
@@ -54,10 +54,11 @@ def test_knapsack_large():
     
     total_weight, total_value, num_items, selected = knapsack_01(weights, values, capacity)
     
-    # The expected result for this problem is to take items with indices 0, 1, 3
-    # which yields a total value of 300 (60 + 100 + 140)
-    assert total_value == 300
-    assert total_weight <= 100
+    # The optimal solution is to take items 1,2,3,4 (1-indexed)
+    # which yields total value of 420 (60+100+120+140) and weight 100
+    assert total_value == 420
+    assert total_weight == 100
+    assert set(selected) == {1, 2, 3, 4}
 
 
 if __name__ == "__main__":

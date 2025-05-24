@@ -10,7 +10,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 from sorting.bubble_sort import bubble
 from sorting.insertion_sort import insertion_sort
 from sorting.merge_sort import merge_sort
-from sorting.quick_sort import quicksort
+from sorting.quick_sort import quick_sort
 from sorting.Selection_sort import selection_sort
 
 
@@ -54,7 +54,7 @@ def test_quick_sort():
     try:
         # Test with regular list
         test_list = [5, 3, 8, 2, 1]
-        result = quicksort(test_list)
+        result = quick_sort(test_list)
         assert result == [1, 2, 3, 5, 8]
     except (NameError, TypeError):
         print("Quicksort function might have a different signature, test skipped.")

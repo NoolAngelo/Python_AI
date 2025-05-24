@@ -12,7 +12,7 @@ import random
 from sorting.bubble_sort import bubble
 from sorting.insertion_sort import insertion_sort
 from sorting.merge_sort import merge_sort
-from sorting.quick_sort import quicksort
+from sorting.quick_sort import quick_sort as quicksort
 from sorting.Selection_sort import selection_sort
 
 

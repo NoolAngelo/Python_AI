@@ -107,22 +107,38 @@ python "Python read from file/readfile.py" "Python read from file/cereal.csv"
 
 ```
 .
-├── maze_ver*.py          # Different versions of maze solver
-├── maze.py               # Main maze solver implementation
-├── maze.txt              # Sample maze input
-├── maze*.png             # Generated maze solutions
-├── README.md             # This file
-├── Python read from file/
-│   ├── cereal.csv        # Sample CSV data
-│   └── readfile.py       # CSV file processor
-└── sorting/
-    ├── bubble_sort.py    # Bubble sort implementation
-    ├── insertion_sort.py # Insertion sort implementation
-    ├── Knapsack.py       # Knapsack problem solver
-    ├── merge_sort.py     # Merge sort implementation
-    ├── quick_sort.py     # Quick sort implementation
-    └── Selection_sort.py # Selection sort implementation
-    └── sortinghat.py     # Sorting algorithms comparison
+├── cli.py                # Main command-line interface
+├── requirements.txt      # Project dependencies
+├── setup.py             # Package setup configuration
+├── README.md            # This file
+├── maze.txt             # Sample maze input
+├── maze*.png            # Generated maze solutions
+├── examples/            # Example scripts and demos
+│   ├── knapsack_example.py
+│   ├── maze_example.py
+│   └── sorting_example.py
+├── maze/                # Maze solving algorithms
+│   ├── __init__.py
+│   ├── cli.py
+│   └── maze_solver.py
+├── sorting/             # Sorting algorithms and optimization
+│   ├── __init__.py
+│   ├── bubble_sort.py   # Bubble sort implementation
+│   ├── insertion_sort.py # Insertion sort implementation
+│   ├── Knapsack.py      # Knapsack problem solver
+│   ├── merge_sort.py    # Merge sort implementation
+│   ├── quick_sort.py    # Quick sort implementation
+│   └── Selection_sort.py # Selection sort implementation
+├── tests/               # Unit tests
+│   ├── test_file_utils.py
+│   ├── test_knapsack.py
+│   └── test_sorting.py
+├── utils/               # Utility functions
+│   ├── __init__.py
+│   └── file_utils.py    # File reading utilities
+└── Python read from file/ # Legacy file utilities
+    ├── cereal.csv       # Sample CSV data
+    └── readfile.py      # CSV file processor
 ```
 
 ## 👥 Contributing

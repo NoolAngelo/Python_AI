@@ -1,4 +1,4 @@
-def insertion(list_a):
+def insertion_sort(list_a):
     """
     Sorts a list using the Insertion Sort algorithm.
     
@@ -22,7 +22,7 @@ if __name__ == "__main__":
     try:
         user_input = input("Enter numbers separated by spaces: ")
         list_a = [int(num) for num in user_input.split()]
-        result = insertion(list_a)
+        result = insertion_sort(list_a)
         print("Sorted values:", result)
     except ValueError as e:
         print(f"Error: {e}")
