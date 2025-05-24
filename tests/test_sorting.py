@@ -1,11 +1,12 @@
 """
 Tests for sorting algorithms.
 """
+
 import sys
 import os
 
 # Add the parent directory to the path to import modules
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from sorting.bubble_sort import bubble
 from sorting.insertion_sort import insertion_sort

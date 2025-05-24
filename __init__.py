@@ -3,4 +3,4 @@
 A collection of algorithms and AI techniques implemented in Python.
 """
 
-__version__ = '1.0.2'
+__version__ = "1.0.2"

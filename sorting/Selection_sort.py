@@ -1,10 +1,10 @@
 def selection_sort(numbers):
     """
     Sorts a list using the Selection Sort algorithm.
-    
+
     Args:
         numbers (list): List of numbers to be sorted.
-    
+
     Returns:
         list: Sorted list.
     """
@@ -16,6 +16,7 @@ def selection_sort(numbers):
                 min_index = j
         numbers[i], numbers[min_index] = numbers[min_index], numbers[i]
     return numbers
+
 
 # Interactive example usage
 if __name__ == "__main__":

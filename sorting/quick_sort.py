@@ -1,10 +1,10 @@
 def quick_sort(arr):
     """
     Sorts a list using the Quick Sort algorithm.
-    
+
     Args:
         arr (list): List of numbers to be sorted.
-    
+
     Returns:
         list: Sorted list.
     """
@@ -16,6 +16,7 @@ def quick_sort(arr):
         middle = [x for x in arr if x == pivot]
         right = [x for x in arr if x > pivot]
         return quick_sort(left) + middle + quick_sort(right)
+
 
 # Interactive example usage
 if __name__ == "__main__":

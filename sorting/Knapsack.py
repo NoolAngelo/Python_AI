@@ -1,18 +1,20 @@
 def knapsack_01(weights, values, capacity):
     """
     Solves the 0/1 Knapsack problem using dynamic programming.
-    
+
     Args:
         weights (list): List of item weights.
         values (list): List of item values.
         capacity (int): Maximum capacity of the knapsack.
-    
+
     Returns:
         tuple: (total_weight, total_value, total_items_used, selected_items)
     """
     if not weights or not values or capacity <= 0:
-        raise ValueError("Invalid input: weights, values, and capacity must be positive.")
-    
+        raise ValueError(
+            "Invalid input: weights, values, and capacity must be positive."
+        )
+
     n = len(weights)
     dp = [[0] * (capacity + 1) for _ in range(n + 1)]
     included_items = set()
@@ -20,7 +22,9 @@ def knapsack_01(weights, values, capacity):
     for i in range(1, n + 1):
         for w in range(1, capacity + 1):
             if weights[i - 1] <= w:
-                dp[i][w] = max(dp[i - 1][w], values[i - 1] + dp[i - 1][w - weights[i - 1]])
+                dp[i][w] = max(
+                    dp[i - 1][w], values[i - 1] + dp[i - 1][w - weights[i - 1]]
+                )
             else:
                 dp[i][w] = dp[i - 1][w]
 
@@ -39,6 +43,7 @@ def knapsack_01(weights, values, capacity):
 
     return total_weight, total_value, total_items_used, selected_items
 
+
 # Interactive example usage
 if __name__ == "__main__":
     try:
@@ -50,7 +55,9 @@ if __name__ == "__main__":
         values = list(map(int, values_input.split()))
         capacity = int(capacity_input)
 
-        total_weight, total_value, total_items_used, selected_items = knapsack_01(weights, values, capacity)
+        total_weight, total_value, total_items_used, selected_items = knapsack_01(
+            weights, values, capacity
+        )
 
         print("Selected items:")
         for item in selected_items:
