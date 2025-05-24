@@ -54,8 +54,14 @@ The maze solver accepts text files where:
 - `A` represents the starting point
 - `B` represents the goal
 
-```bash
-python maze.py maze.txt
+```python
+from maze.maze_solver import Maze
+
+# Load and solve a maze
+maze = Maze("maze.txt")
+maze.solve(algorithm="dfs")  # or "bfs"
+maze.print()
+maze.output_image("solution.png", show_solution=True)
 ```
 
 This will generate a solution visualization as an image.
@@ -107,7 +113,6 @@ python "Python read from file/readfile.py" "Python read from file/cereal.csv"
 
 ```
 .
-├── cli.py                # Main command-line interface
 ├── requirements.txt      # Project dependencies
 ├── setup.py             # Package setup configuration
 ├── README.md            # This file
@@ -119,7 +124,6 @@ python "Python read from file/readfile.py" "Python read from file/cereal.csv"
 │   └── sorting_example.py
 ├── maze/                # Maze solving algorithms
 │   ├── __init__.py
-│   ├── cli.py
 │   └── maze_solver.py
 ├── sorting/             # Sorting algorithms and optimization
 │   ├── __init__.py
