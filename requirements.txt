@@ -1,0 +1,6 @@
+# Python_AI Project Requirements
+pillow>=10.0.0  # For maze visualization and image processing
+pytest>=7.4.0   # For testing
+mypy>=1.5.0     # For type checking
+black>=23.7.0   # For code formatting
+isort>=5.12.0   # For import sorting
